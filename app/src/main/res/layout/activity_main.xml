@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDark"
+    tools:context=".MainActivity">
+
+    <!-- row one -->
+
+    <LinearLayout
+        android:id="@+id/row_one"
+        style="@style/row_style"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <Button
+            android:id="@+id/reset"
+            style="@style/button_style.dark"
+            android:text="@string/reset" />
+
+
+        <Button
+            android:id="@+id/root"
+            style="@style/button_style.dark"
+            android:text="@string/root" />
+
+        <Button
+            android:id="@+id/percent"
+            style="@style/button_style.dark"
+            android:text="@string/percent" />
+
+        <Button
+            android:id="@+id/equal"
+            style="@style/button_style.dark"
+            android:text="@string/equal" />
+
+    </LinearLayout>
+
+
+    <!-- row two -->
+    <LinearLayout
+        android:id="@+id/row_two"
+        style="@style/row_style"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/row_one">
+
+        <Button
+            android:id="@+id/change_operator"
+            style="@style/button_style.light"
+            android:text="@string/change_operator" />
+
+
+        <Button
+            android:id="@+id/zero"
+            style="@style/button_style.light"
+            android:text="@string/zero" />
+
+        <Button
+            android:id="@+id/decimal"
+            style="@style/button_style.light"
+            android:text="@string/decimal" />
+
+        <Button
+            android:id="@+id/plus"
+            style="@style/button_style.dark"
+            android:text="@string/plus" />
+
+    </LinearLayout>
+
+    <!-- row three -->
+    <LinearLayout
+        android:id="@+id/row_three"
+        style="@style/row_style"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/row_two">
+
+        <Button
+            android:id="@+id/one"
+            style="@style/button_style.light"
+            android:text="@string/one" />
+
+
+        <Button
+            android:id="@+id/two"
+            style="@style/button_style.light"
+            android:text="@string/two" />
+
+        <Button
+            android:id="@+id/three"
+            style="@style/button_style.light"
+            android:text="@string/three" />
+
+        <Button
+            android:id="@+id/minus"
+            style="@style/button_style.dark"
+            android:text="@string/minus" />
+
+    </LinearLayout>
+
+    <!--row four-->
+    <LinearLayout
+        android:id="@+id/row_four"
+        style="@style/row_style"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/row_three">
+
+        <Button
+            android:id="@+id/four"
+            style="@style/button_style.light"
+            android:text="@string/four" />
+
+
+        <Button
+            android:id="@+id/five"
+            style="@style/button_style.light"
+            android:text="@string/five" />
+
+        <Button
+            android:id="@+id/six"
+            style="@style/button_style.light"
+            android:text="@string/six" />
+
+        <Button
+            android:id="@+id/multiply"
+            style="@style/button_style.dark"
+            android:text="@string/multiply" />
+
+    </LinearLayout>
+
+    <!-- row five -->
+    <LinearLayout
+        android:id="@+id/row_five"
+        style="@style/row_style"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/row_four">
+
+        <Button
+            android:id="@+id/seven"
+            style="@style/button_style.light"
+            android:text="@string/seven" />
+
+
+        <Button
+            android:id="@+id/eight"
+            style="@style/button_style.light"
+            android:text="@string/eight" />
+
+        <Button
+            android:id="@+id/nine"
+            style="@style/button_style.light"
+            android:text="@string/nine" />
+
+        <Button
+            android:id="@+id/divide"
+            style="@style/button_style.dark"
+            android:text="@string/divide" />
+
+    </LinearLayout>
+
+    <!-- row six -->
+    <LinearLayout
+        android:id="@+id/row_six"
+        style="@style/row_style"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/row_five">
+
+        <Button
+            android:id="@+id/memory_total"
+            style="@style/button_style.gray"
+            android:text="@string/memory_total" />
+
+
+        <Button
+            android:id="@+id/memory_plus"
+            style="@style/button_style.gray"
+            android:text="@string/memory_plus" />
+
+        <Button
+            android:id="@+id/memory_minus"
+            style="@style/button_style.gray"
+            android:text="@string/memory_minus" />
+
+        <Button
+            android:id="@+id/delete"
+            style="@style/button_style.gray"
+            android:text="@string/delete" />
+
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>
