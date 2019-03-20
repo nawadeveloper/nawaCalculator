@@ -7,8 +7,48 @@
     android:background="@color/colorPrimaryDark"
     tools:context=".MainActivity">
 
-    <!-- row one -->
+    <!-- screen -->
+    <LinearLayout
+        android:id="@+id/screen_space"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/row_six"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
+        <TextView
+            android:id="@+id/screen_operator"
+            style="@style/screen"
+            android:layout_width="50dp"
+            android:gravity="center"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:maxLines="1"
+            android:maxLength="13"
+            android:id="@+id/screen_result"
+            style="@style/screen"
+            android:layout_width="match_parent"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:gravity="center_vertical|end"
+            android:inputType="numberDecimal|numberSigned"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:text="@string/zero"
+            android:textSize="36sp" />
+
+
+    </LinearLayout>
+
+
+    <!-- row one -->
     <LinearLayout
         android:id="@+id/row_one"
         style="@style/row_style"
@@ -46,9 +86,9 @@
         android:id="@+id/row_two"
         style="@style/row_style"
         android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@id/row_one"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/row_one">
+        app:layout_constraintStart_toStartOf="parent">
 
         <Button
             android:id="@+id/change_operator"
@@ -78,9 +118,9 @@
         android:id="@+id/row_three"
         style="@style/row_style"
         android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@id/row_two"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/row_two">
+        app:layout_constraintStart_toStartOf="parent">
 
         <Button
             android:id="@+id/one"
@@ -110,9 +150,9 @@
         android:id="@+id/row_four"
         style="@style/row_style"
         android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@id/row_three"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/row_three">
+        app:layout_constraintStart_toStartOf="parent">
 
         <Button
             android:id="@+id/four"
@@ -142,9 +182,9 @@
         android:id="@+id/row_five"
         style="@style/row_style"
         android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@id/row_four"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/row_four">
+        app:layout_constraintStart_toStartOf="parent">
 
         <Button
             android:id="@+id/seven"
@@ -174,9 +214,9 @@
         android:id="@+id/row_six"
         style="@style/row_style"
         android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@id/row_five"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/row_five">
+        app:layout_constraintStart_toStartOf="parent">
 
         <Button
             android:id="@+id/memory_total"
@@ -195,7 +235,7 @@
             android:text="@string/memory_minus" />
 
         <Button
-            android:id="@+id/delete"
+            android:id="@+id/backspace"
             style="@style/button_style.gray"
             android:text="@string/delete" />
 
