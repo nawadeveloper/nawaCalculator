@@ -155,8 +155,8 @@ class MainActivity : AppCompatActivity() {
             }
 
 
-            answer = answer?.stripTrailingZeros()
-            screen_result.setText(answer.toString())
+            answer = answer!!.stripTrailingZeros()
+            screen_result.setText(answer.toPlainString())
             Log.d("click", answer.toString())
             firstNumber = answer
             secondNumber = null
