@@ -2,7 +2,6 @@ package np.com.nawarajbista.nawacalculator
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Editable
 import android.util.Log
 import android.view.View
 import android.widget.Button
@@ -62,6 +61,11 @@ class MainActivity : AppCompatActivity() {
 
             result()
             screen_operator.text = v.text
+            if(screen_operator.text.toString() == "=") {
+                firstNumber = null
+                secondNumber = null
+            }
+
             operator = v.text.toString()
             Log.d("click", operator)
             Log.d("click", firstNumber.toString())
@@ -140,16 +144,18 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun result() {
-        var answer: BigDecimal? = null
         if(firstNumber != null && secondNumber != null && operator != null) {
+            var answer: BigDecimal? = null
             when(operator) {
                 "+" -> answer = firstNumber?.add(secondNumber)
                 "-" -> answer = firstNumber?.subtract(secondNumber)
                 "X" -> answer = firstNumber?.multiply(secondNumber)
                 "÷" -> answer = firstNumber?.divide(secondNumber,11, RoundingMode.CEILING)
+
             }
 
 
+            answer = answer?.stripTrailingZeros()
             screen_result.setText(answer.toString())
             Log.d("click", answer.toString())
             firstNumber = answer
