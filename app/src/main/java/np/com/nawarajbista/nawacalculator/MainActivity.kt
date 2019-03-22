@@ -32,7 +32,6 @@ class MainActivity : AppCompatActivity() {
                 firstNumber = null
             }
             else {
-
                 if(screen_result.text.length == 1) {
                     screen_result.setText("0")
                 }
@@ -44,6 +43,16 @@ class MainActivity : AppCompatActivity() {
 
         reset.setOnClickListener {
             resetAll()
+        }
+
+        positiveNegative.setOnClickListener {
+            val screenNum = BigDecimal(screen_result.text.toString())
+            val valueChanger = BigDecimal("-1")
+            val newValue = screenNum.multiply(valueChanger)
+            screen_result.setText(newValue.toPlainString())
+            if(operator != null) {
+                firstNumber = newValue
+            }
         }
     }
 
@@ -67,9 +76,6 @@ class MainActivity : AppCompatActivity() {
             }
 
             operator = v.text.toString()
-            Log.d("click", operator)
-            Log.d("click", firstNumber.toString())
-            Log.d("click", secondNumber.toString())
 
         }
 

@@ -91,7 +91,7 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <Button
-            android:id="@+id/change_operator"
+            android:id="@+id/positiveNegative"
             style="@style/button_style.light"
             android:text="@string/change_operator" />
 
