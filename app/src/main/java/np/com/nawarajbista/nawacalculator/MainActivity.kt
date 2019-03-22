@@ -45,6 +45,7 @@ class MainActivity : AppCompatActivity() {
             resetAll()
         }
 
+
         positiveNegative.setOnClickListener {
             val screenNum = BigDecimal(screen_result.text.toString())
             val valueChanger = BigDecimal("-1")
@@ -53,6 +54,17 @@ class MainActivity : AppCompatActivity() {
             if(operator != null) {
                 firstNumber = newValue
             }
+        }
+
+        root.setOnClickListener {
+            val screenNum = screen_result.text.toString().toDouble()
+
+            if(screenNum > 0) {
+                val rootNum = Math.sqrt(screenNum)
+                val rn = rootNum.toBigDecimal().stripTrailingZeros()
+                screen_result.setText(rn.toPlainString())
+            }
+
         }
     }
 
