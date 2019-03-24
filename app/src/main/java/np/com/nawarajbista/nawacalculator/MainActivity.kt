@@ -64,7 +64,26 @@ class MainActivity : AppCompatActivity() {
                 val rn = rootNum.toBigDecimal().stripTrailingZeros()
                 screen_result.setText(rn.toPlainString())
             }
+        }
 
+        percent.setOnClickListener {
+
+            if(firstNumber != null) {
+                secondNumber = BigDecimal(screen_result.text.toString())
+            }
+
+            val ans = getPercentResult()
+            if(ans != null) {
+                screen_result.setText(ans.toPlainString())
+            }
+            else {
+                screen_result.setText("0")
+            }
+
+            screen_operator.setText(R.string.equal)
+            operator = screen_operator.text.toString()
+            firstNumber = null
+            secondNumber = null
         }
     }
 
@@ -73,14 +92,10 @@ class MainActivity : AppCompatActivity() {
         val operatorClickListener = View.OnClickListener {
             val v = it as Button
 
-            if(firstNumber != null && screen_operator.text.isEmpty()) {
-                secondNumber = BigDecimal(screen_result.text.toString())
-            }
-            else {
-                firstNumber = BigDecimal(screen_result.text.toString())
-            }
+            getInputValue()
 
             result()
+
             screen_operator.text = v.text
             if(screen_operator.text.toString() == "=") {
                 firstNumber = null
@@ -133,9 +148,6 @@ class MainActivity : AppCompatActivity() {
 
                 }
             }
-
-
-
         }
 
         zero.setOnClickListener ( numberClickListener )
@@ -149,6 +161,16 @@ class MainActivity : AppCompatActivity() {
         eight.setOnClickListener ( numberClickListener )
         nine.setOnClickListener ( numberClickListener )
         decimal.setOnClickListener ( numberClickListener )
+    }
+
+
+    private fun getInputValue() {
+        if(firstNumber != null && screen_operator.text.isEmpty()) {
+            secondNumber = BigDecimal(screen_result.text.toString())
+        }
+        else {
+            firstNumber = BigDecimal(screen_result.text.toString())
+        }
     }
 
 
@@ -180,4 +202,25 @@ class MainActivity : AppCompatActivity() {
             secondNumber = null
         }
     }
+
+
+    private fun getPercentResult(): BigDecimal? {
+        var ans: BigDecimal? = BigDecimal("0")
+
+        if(firstNumber != null && secondNumber != null && operator != null) {
+            val sv: BigDecimal? = firstNumber?.multiply(secondNumber)?.divide(BigDecimal("100"), 11, RoundingMode.CEILING)
+
+
+            when(operator) {
+                "+" -> ans = firstNumber?.add(sv)
+                "-" -> ans = firstNumber?.subtract(sv)
+                "X" -> ans = sv
+                "÷" -> ans = firstNumber?.divide(secondNumber, 11, RoundingMode.CEILING)?.multiply(BigDecimal("100"))
+            }
+        }
+
+        return ans?.stripTrailingZeros()
+    }
 }
+
+
