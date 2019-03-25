@@ -6,6 +6,8 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import kotlinx.android.synthetic.main.activity_main.*
+import java.lang.ArithmeticException
+import java.lang.Exception
 import java.math.BigDecimal
 import java.math.RoundingMode
 
@@ -73,15 +75,17 @@ class MainActivity : AppCompatActivity() {
             }
 
             val ans = getPercentResult()
+
             if(ans != null) {
+                //handling error
                 screen_result.setText(ans.toPlainString())
+                screen_operator.setText(R.string.equal)
             }
             else {
-                screen_result.setText("0")
+                screen_result.setText(R.string.zero)
+                screen_operator.setText(R.string.error)
             }
 
-            screen_operator.setText(R.string.equal)
-            operator = screen_operator.text.toString()
             firstNumber = null
             secondNumber = null
         }
@@ -128,9 +132,8 @@ class MainActivity : AppCompatActivity() {
                 }
                 else {
                     screen_result.setText(v.text)
-                    Log.d("click", screen_operator.text.toString())
-
                 }
+
                 //removing operator sign from screen
                 screen_operator.text = null
             }
@@ -139,12 +142,9 @@ class MainActivity : AppCompatActivity() {
                 if(screen_result.text.toString() == "0" && v.text.toString() != ".") {
                     //remove zero before any number and and zero before decimal
                     screen_result.setText(v.text)
-                    Log.d("click", "0 and .")
-
                 }
                 else {
                     screen_result.append(v.text)
-                    Log.d("click", "append")
 
                 }
             }
@@ -166,6 +166,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun getInputValue() {
         if(firstNumber != null && screen_operator.text.isEmpty()) {
+            // stopping same number value from assigning while pressing operator twice
             secondNumber = BigDecimal(screen_result.text.toString())
         }
         else {
@@ -190,14 +191,23 @@ class MainActivity : AppCompatActivity() {
                 "+" -> answer = firstNumber?.add(secondNumber)
                 "-" -> answer = firstNumber?.subtract(secondNumber)
                 "X" -> answer = firstNumber?.multiply(secondNumber)
-                "÷" -> answer = firstNumber?.divide(secondNumber,11, RoundingMode.CEILING)
+                "÷" -> {
+                    // handling fool user trying to divide number by zero
+                    try {
+                        answer = firstNumber?.divide(secondNumber,11, RoundingMode.CEILING)
+                    }
+                    catch (e: ArithmeticException) {
+                        resetAll()
+                        screen_operator.setText(R.string.error)
+                        return
+                    }
+                }
 
             }
 
-
-            answer = answer!!.stripTrailingZeros()
-            screen_result.setText(answer.toPlainString())
-            Log.d("click", answer.toString())
+            answer = answer?.stripTrailingZeros()
+            screen_result.setText(answer?.toPlainString())
+            Log.d("click", answer?.toString())
             firstNumber = answer
             secondNumber = null
         }
@@ -205,7 +215,8 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun getPercentResult(): BigDecimal? {
-        var ans: BigDecimal? = BigDecimal("0")
+        var ans: BigDecimal? = BigDecimal.ZERO
+        val zero = ans
 
         if(firstNumber != null && secondNumber != null && operator != null) {
             val sv: BigDecimal? = firstNumber?.multiply(secondNumber)?.divide(BigDecimal("100"), 11, RoundingMode.CEILING)
@@ -215,8 +226,22 @@ class MainActivity : AppCompatActivity() {
                 "+" -> ans = firstNumber?.add(sv)
                 "-" -> ans = firstNumber?.subtract(sv)
                 "X" -> ans = sv
-                "÷" -> ans = firstNumber?.divide(secondNumber, 11, RoundingMode.CEILING)?.multiply(BigDecimal("100"))
+                "÷" -> {
+                    try {
+                        // handling fool user trying to divide number by zero
+                        ans = firstNumber?.divide(secondNumber, 11, RoundingMode.CEILING)?.multiply(BigDecimal("100"))
+                    }
+                    catch (e: Exception) {
+                        resetAll()
+                        return null
+                    }
+                }
             }
+        }
+
+        //handling stripTrailingZeros() error
+        if(ans?.compareTo(zero) == 0) {
+            return zero
         }
 
         return ans?.stripTrailingZeros()
