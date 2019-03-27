@@ -15,6 +15,7 @@ class MainActivity : AppCompatActivity() {
     private var firstNumber: BigDecimal? = null
     private var secondNumber: BigDecimal? = null
     private var operator: String? = null
+    private var calculationError: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,7 +75,7 @@ class MainActivity : AppCompatActivity() {
 
             val ans = getPercentResult()
 
-            if(ans != null) {
+            if(ans != null) { //and calculationError is false
                 //handling error
                 screen_result.setText(ans.toPlainString())
                 screen_operator.setText(R.string.equal)
@@ -82,6 +83,7 @@ class MainActivity : AppCompatActivity() {
             else {
                 screen_result.setText(R.string.zero)
                 screen_operator.setText(R.string.error)
+                calculationError = false
             }
 
             firstNumber = null
@@ -98,7 +100,16 @@ class MainActivity : AppCompatActivity() {
 
             result()
 
-            screen_operator.text = v.text
+            if(calculationError) {
+                screen_operator.setText(R.string.error)
+                calculationError = false
+                firstNumber = null
+                secondNumber = null
+            }
+            else {
+                screen_operator.text = v.text
+            }
+
             if(screen_operator.text.toString() == "=") {
                 firstNumber = null
                 secondNumber = null
@@ -214,6 +225,7 @@ class MainActivity : AppCompatActivity() {
                     }
                     catch (e: Exception) {
                         resetAll()
+                        calculationError = true
                         return null
                     }
                 }
@@ -268,7 +280,8 @@ class MainActivity : AppCompatActivity() {
         }
         catch (e: Exception) {
             resetAll()
-            screen_operator.setText(R.string.error)
+            calculationError = true
+//            screen_operator.setText(R.string.error)
         }
         finally {
             return ans
