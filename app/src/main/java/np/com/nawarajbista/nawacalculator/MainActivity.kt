@@ -14,6 +14,7 @@ class MainActivity : AppCompatActivity() {
 
     private var firstNumber: BigDecimal? = null
     private var secondNumber: BigDecimal? = null
+    private var memoryTotal = BigDecimal.ZERO
     private var operator: String? = null
     private var calculationError: Boolean = false
 
@@ -25,6 +26,48 @@ class MainActivity : AppCompatActivity() {
         numberClick()
 
         operatorClick()
+
+        memory_plus.setOnClickListener {
+
+            getInputValue()
+
+            if(firstNumber != null && secondNumber != null && operator != null) {
+                screen_result.setText(calculate()?.toPlainString())
+            }
+
+            val mPlus = BigDecimal(screen_result.text.toString())
+            screen_operator.setText(R.string.equal)
+
+            firstNumber = null
+            secondNumber = null
+
+            memoryTotal = addition(memoryTotal, mPlus)
+
+        }
+
+        memory_minus.setOnClickListener {
+
+            getInputValue()
+
+            if(firstNumber != null && secondNumber != null && operator != null) {
+                screen_result.setText(calculate()?.toPlainString())
+            }
+
+            val mMinus = BigDecimal(screen_result.text.toString())
+            screen_operator.setText(R.string.equal)
+
+            firstNumber = null
+            secondNumber = null
+
+            memoryTotal = subtraction(memoryTotal, mMinus)
+
+        }
+
+        memory_total.setOnClickListener {
+            screen_result.setText(memoryTotal.toPlainString())
+            screen_operator.setText(R.string.equal)
+            memoryTotal = BigDecimal.ZERO
+        }
 
         backspace.setOnClickListener {
             if(screen_operator.text.isNotEmpty()) {
@@ -190,17 +233,18 @@ class MainActivity : AppCompatActivity() {
         firstNumber = null
         secondNumber = null
         operator = null
+        memoryTotal = BigDecimal.ZERO
     }
 
 
     private fun result() {
         if(firstNumber != null && secondNumber != null && operator != null) {
-            val answer = calculate()!!.stripTrailingZeros()
+            val answer = calculate()
 
             //need to work on this to print scientific notation when number is large
 //                screen_result.setText(answer.toEngineeringString())
 
-            screen_result.setText(answer.toPlainString())
+            screen_result.setText(answer?.toPlainString())
             firstNumber = answer
             secondNumber = null
         }
@@ -211,7 +255,8 @@ class MainActivity : AppCompatActivity() {
         val zero = ans
 
         if(firstNumber != null && secondNumber != null && operator != null) {
-            val sv: BigDecimal? = firstNumber?.multiply(secondNumber)?.divide(BigDecimal("100"), 11, RoundingMode.CEILING)
+            val sv: BigDecimal? = firstNumber?.multiply(secondNumber)?.
+                divide(BigDecimal("100"), 11, RoundingMode.CEILING)
 
 
             when(operator) {
@@ -255,7 +300,7 @@ class MainActivity : AppCompatActivity() {
             "÷" -> answer = division(firstNumber, secondNumber)
         }
 
-        return answer
+        return answer.stripTrailingZeros()
     }
 
 
@@ -274,24 +319,17 @@ class MainActivity : AppCompatActivity() {
     private fun division(fn: BigDecimal?, sn: BigDecimal?): BigDecimal? {
         var ans = BigDecimal.ZERO
 
-
         try {
             ans = fn?.divide(sn,11, RoundingMode.CEILING)
         }
         catch (e: Exception) {
             resetAll()
             calculationError = true
-//            screen_operator.setText(R.string.error)
         }
         finally {
             return ans
         }
     }
-
-
-
-
-
 }
 
 
