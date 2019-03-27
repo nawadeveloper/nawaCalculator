@@ -2,11 +2,9 @@ package np.com.nawarajbista.nawacalculator
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import kotlinx.android.synthetic.main.activity_main.*
-import java.lang.ArithmeticException
 import java.lang.Exception
 import java.math.BigDecimal
 import java.math.RoundingMode
@@ -186,33 +184,16 @@ class MainActivity : AppCompatActivity() {
 
     private fun result() {
         if(firstNumber != null && secondNumber != null && operator != null) {
-            var answer: BigDecimal? = null
-            when(operator) {
-                "+" -> answer = firstNumber?.add(secondNumber)
-                "-" -> answer = firstNumber?.subtract(secondNumber)
-                "X" -> answer = firstNumber?.multiply(secondNumber)
-                "÷" -> {
-                    // handling fool user trying to divide number by zero
-                    try {
-                        answer = firstNumber?.divide(secondNumber,11, RoundingMode.CEILING)
-                    }
-                    catch (e: ArithmeticException) {
-                        resetAll()
-                        screen_operator.setText(R.string.error)
-                        return
-                    }
-                }
+            val answer = calculate()!!.stripTrailingZeros()
 
-            }
+            //need to work on this to print scientific notation when number is large
+//                screen_result.setText(answer.toEngineeringString())
 
-            answer = answer?.stripTrailingZeros()
-            screen_result.setText(answer?.toPlainString())
-            Log.d("click", answer?.toString())
+            screen_result.setText(answer.toPlainString())
             firstNumber = answer
             secondNumber = null
         }
     }
-
 
     private fun getPercentResult(): BigDecimal? {
         var ans: BigDecimal? = BigDecimal.ZERO
@@ -246,6 +227,58 @@ class MainActivity : AppCompatActivity() {
 
         return ans?.stripTrailingZeros()
     }
+
+
+
+
+// helper function
+
+
+    private fun calculate(): BigDecimal? {
+        var answer = BigDecimal.ZERO
+        when(operator) {
+            "+" -> answer = addition(firstNumber, secondNumber)
+            "-" -> answer = subtraction(firstNumber, secondNumber)
+            "X" -> answer = multiplication(firstNumber, secondNumber)
+            "÷" -> answer = division(firstNumber, secondNumber)
+        }
+
+        return answer
+    }
+
+
+    private fun addition(fn: BigDecimal?, sn: BigDecimal?): BigDecimal? {
+        return fn?.add(sn)
+    }
+
+    private fun subtraction(fn: BigDecimal?, sn: BigDecimal?): BigDecimal? {
+        return fn?.subtract(sn)
+    }
+
+    private fun multiplication(fn: BigDecimal?, sn: BigDecimal?): BigDecimal? {
+        return fn?.multiply(sn)
+    }
+
+    private fun division(fn: BigDecimal?, sn: BigDecimal?): BigDecimal? {
+        var ans = BigDecimal.ZERO
+
+
+        try {
+            ans = fn?.divide(sn,11, RoundingMode.CEILING)
+        }
+        catch (e: Exception) {
+            resetAll()
+            screen_operator.setText(R.string.error)
+        }
+        finally {
+            return ans
+        }
+    }
+
+
+
+
+
 }
 
 
