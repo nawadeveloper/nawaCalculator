@@ -1,5 +1,6 @@
 package np.com.nawarajbista.nawacalculator
 
+import android.content.res.Configuration
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -21,6 +22,30 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        //landscape mode
+        if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+
+            supportActionBar?.hide()
+
+
+            pie?.setOnClickListener {
+                screen_result.setText(R.string.pie_value)
+                screen_operator.text = null
+            }
+
+            square?.setOnClickListener {
+                val numOnScreen = BigDecimal(screen_result.text.toString())
+
+                val square = setZeroEqualToZero(multiplication(numOnScreen, numOnScreen))
+
+                screen_operator.text = null
+
+                screen_result.setText(square?.toPlainString())
+
+            }
+
+        }
 
         // click events
         numberClick()
@@ -103,7 +128,9 @@ class MainActivity : AppCompatActivity() {
         root.setOnClickListener {
             val screenNum = screen_result.text.toString().toDouble()
 
-            if(screenNum > 0) {
+            screen_operator.text = null
+
+            if(screenNum != 0.0) {
                 val rootNum = Math.sqrt(screenNum)
                 val rn = rootNum.toBigDecimal().stripTrailingZeros()
                 screen_result.setText(rn.toPlainString())
@@ -150,7 +177,12 @@ class MainActivity : AppCompatActivity() {
                 secondNumber = null
             }
             else {
-                screen_operator.text = v.text
+                if(v.text == resources.getString(R.string.power_y)) {
+                    screen_operator.text = "^"
+                }
+                else {
+                    screen_operator.text = v.text
+                }
             }
 
             if(screen_operator.text.toString() == "=") {
@@ -167,6 +199,7 @@ class MainActivity : AppCompatActivity() {
         multiply.setOnClickListener ( operatorClickListener )
         divide.setOnClickListener ( operatorClickListener )
         equal.setOnClickListener( operatorClickListener )
+        power_y?.setOnClickListener ( operatorClickListener )
 
     }
 
@@ -252,7 +285,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun getPercentResult(): BigDecimal? {
         var ans: BigDecimal? = BigDecimal.ZERO
-        val zero = ans
 
         if(firstNumber != null && secondNumber != null && operator != null) {
             val sv: BigDecimal? = firstNumber?.multiply(secondNumber)?.
@@ -277,12 +309,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        //handling stripTrailingZeros() error
-        if(ans?.compareTo(zero) == 0) {
-            return zero
-        }
-
-        return ans?.stripTrailingZeros()
+        return setZeroEqualToZero(ans)
     }
 
 
@@ -294,13 +321,18 @@ class MainActivity : AppCompatActivity() {
     private fun calculate(): BigDecimal? {
         var answer = BigDecimal.ZERO
         when(operator) {
-            "+" -> answer = addition(firstNumber, secondNumber)
-            "-" -> answer = subtraction(firstNumber, secondNumber)
-            "X" -> answer = multiplication(firstNumber, secondNumber)
-            "÷" -> answer = division(firstNumber, secondNumber)
+            resources.getString(R.string.plus) -> answer = addition(firstNumber, secondNumber)
+            resources.getString(R.string.minus) -> answer = subtraction(firstNumber, secondNumber)
+            resources.getString(R.string.multiply) -> answer = multiplication(firstNumber, secondNumber)
+            resources.getString(R.string.divide) -> answer = division(firstNumber, secondNumber)
+            resources.getString(R.string.power_y) -> answer = powerResult(firstNumber, 6)
         }
 
-        return answer.stripTrailingZeros()
+        return setZeroEqualToZero(answer)
+    }
+
+    private fun powerResult(x: BigDecimal?, y: Int): BigDecimal? {
+        return x?.pow(y)
     }
 
 
@@ -329,6 +361,15 @@ class MainActivity : AppCompatActivity() {
         finally {
             return ans
         }
+    }
+
+    //handling stripTrailingZeros() 0.0000000 error
+    private fun setZeroEqualToZero(num: BigDecimal?): BigDecimal? {
+        if(num?.compareTo(BigDecimal.ZERO) == 0) {
+            return BigDecimal.ZERO
+        }
+
+        return num?.stripTrailingZeros()
     }
 }
 

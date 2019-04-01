@@ -25,4 +25,11 @@
     <string name="decimal">.</string>
     <string name="zero">0</string>
     <string name="error">E</string>
+    <string name="log">log</string>
+    <string name="pie">π</string>
+    <string name="one_divide_x">1/x</string>
+    <string name="factorial">x!</string>
+    <string name="square">x\u00B2</string>
+    <string name="power_y">x\u02B8</string>
+    <string name="pie_value">3.1415926535897932384626433832795</string>
 </resources>

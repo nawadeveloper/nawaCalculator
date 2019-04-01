@@ -16,6 +16,7 @@
         <item name="android:layout_marginBottom">8dp</item>
     </style>
 
+
     <!-- style for every button -->
     <style name="button_style">
         <item name="android:layout_height">match_parent</item>
@@ -46,6 +47,38 @@
         <item name="android:layout_height">100dp</item>
         <item name="android:background">@color/white</item>
         <item name="android:textColor">@color/black</item>
+    </style>
+
+
+
+    <!-- for landscape mode -->
+
+    <style name="screen.land">
+        <item name="android:layout_height">60dp</item>
+    </style>
+
+    <style name="row_style.land">
+        <item name="android:layout_height">44dp</item>
+        <item name="android:paddingRight">16dp</item>
+    </style>
+
+    <style name="button_style.land">
+        <item name="android:layout_marginLeft">16dp</item>
+    </style>
+
+    <style name="button_style.land.dark">
+        <item name="android:background">@drawable/button_dark</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="button_style.land.light">
+        <item name="android:background">@drawable/button_light</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="button_style.land.gray">
+        <item name="android:background">@drawable/button_gray</item>
+        <item name="android:textColor">@color/white</item>
     </style>
 
 </resources>
