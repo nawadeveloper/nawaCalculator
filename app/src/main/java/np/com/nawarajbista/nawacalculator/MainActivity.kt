@@ -3,6 +3,7 @@ package np.com.nawarajbista.nawacalculator
 import android.content.res.Configuration
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import kotlinx.android.synthetic.main.activity_main.*
@@ -120,8 +121,9 @@ class MainActivity : AppCompatActivity() {
             val valueChanger = BigDecimal("-1")
             val newValue = screenNum.multiply(valueChanger)
             screen_result.setText(newValue.toPlainString())
-            if(operator != null) {
-                firstNumber = newValue
+
+            if(screen_operator.text != null) {
+                screen_operator.text = null
             }
         }
 
@@ -325,14 +327,34 @@ class MainActivity : AppCompatActivity() {
             resources.getString(R.string.minus) -> answer = subtraction(firstNumber, secondNumber)
             resources.getString(R.string.multiply) -> answer = multiplication(firstNumber, secondNumber)
             resources.getString(R.string.divide) -> answer = division(firstNumber, secondNumber)
-            resources.getString(R.string.power_y) -> answer = powerResult(firstNumber, 6)
+            resources.getString(R.string.power_y) -> answer = powerResult(firstNumber, secondNumber)
         }
 
         return setZeroEqualToZero(answer)
     }
 
-    private fun powerResult(x: BigDecimal?, y: Int): BigDecimal? {
-        return x?.pow(y)
+    private fun powerResult(x: BigDecimal?, y: BigDecimal?): BigDecimal? {
+        val ys = y!!.stripTrailingZeros()
+        val zero = BigDecimal.ZERO
+        val one = BigDecimal.ONE
+
+        //for integer
+        if(ys.scale() <= 0) {
+            //for negative power
+            if(ys < zero) {
+                val changeToPositive = BigDecimal("-1")
+                val cys = ys.multiply(changeToPositive).intValueExact()
+                val xPowCys = x?.pow(cys)
+
+                return one.divide(xPowCys)
+            }
+            // for positive power
+            return x?.pow(ys.intValueExact())
+        }
+
+        calculationError = true
+        return zero
+
     }
 
 
