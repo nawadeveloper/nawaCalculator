@@ -46,6 +46,22 @@ class MainActivity : AppCompatActivity() {
 
             }
 
+            factorial?.setOnClickListener {
+                val screenNum = BigDecimal(screen_result.text.toString()).stripTrailingZeros()
+                var result = BigDecimal.ZERO
+                val screenIntNum = screenNum.toInt()
+                screen_operator.text = null
+
+                if(screenNum.scale() <= 0 ) {
+                    result = factorialResult(screenIntNum)
+                }
+
+                Log.d("click", screenNum.scale().toString())
+                screen_result.setText(result.toPlainString())
+
+
+            }
+
         }
 
         // click events
@@ -161,6 +177,33 @@ class MainActivity : AppCompatActivity() {
             firstNumber = null
             secondNumber = null
         }
+    }
+
+    private fun factorialResult(num: Int?):BigDecimal? {
+
+        var result: BigDecimal? = BigDecimal.ZERO
+        if(num == 1 || num == 0) {
+            return BigDecimal.ONE
+        }
+
+        //negative factorial error
+        if(num!! < 0) {
+            resetAll()
+            screen_operator.setText(R.string.error)
+            return result
+        }
+
+        try {
+            val findResult = num * factorialResult(num - 1)!!.toInt()
+            result = BigDecimal(findResult)
+        }
+        catch (e: Exception) {
+            resetAll()
+            screen_operator.setText(R.string.error)
+        }
+
+        return result
+
     }
 
     //function for handling click event
