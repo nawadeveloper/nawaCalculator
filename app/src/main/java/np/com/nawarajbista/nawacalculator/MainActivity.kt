@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 import java.lang.Exception
 import java.math.BigDecimal
@@ -49,11 +50,10 @@ class MainActivity : AppCompatActivity() {
             factorial?.setOnClickListener {
                 val screenNum = BigDecimal(screen_result.text.toString()).stripTrailingZeros()
                 var result = BigDecimal.ZERO
-                val screenIntNum = screenNum.toInt()
                 screen_operator.text = null
 
                 if(screenNum.scale() <= 0 ) {
-                    result = factorialResult(screenIntNum)
+                    result = factorialResult(screenNum)
                 }
 
                 Log.d("click", screenNum.scale().toString())
@@ -179,23 +179,29 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun factorialResult(num: Int?):BigDecimal? {
+    private fun factorialResult(num: BigDecimal):BigDecimal? {
 
         var result: BigDecimal? = BigDecimal.ZERO
-        if(num == 1 || num == 0) {
+        if(num == BigDecimal.ZERO || num == BigDecimal.ONE) {
             return BigDecimal.ONE
         }
 
         //negative factorial error
-        if(num!! < 0) {
+        if(num < BigDecimal.ZERO) {
             resetAll()
             screen_operator.setText(R.string.error)
+            Toast.makeText(applicationContext, "Factorial for negative number are not allowed", Toast.LENGTH_SHORT)
+                .show()
             return result
         }
 
+        if(num.toInt() > 9999) {
+            Toast.makeText(applicationContext, "Too large number", Toast.LENGTH_SHORT).show()
+            return num
+        }
+
         try {
-            val findResult = num * factorialResult(num - 1)!!.toInt()
-            result = BigDecimal(findResult)
+            result = num.multiply(factorialResult(num.subtract(BigDecimal.ONE)))
         }
         catch (e: Exception) {
             resetAll()
@@ -297,10 +303,21 @@ class MainActivity : AppCompatActivity() {
     private fun getInputValue() {
         if(firstNumber != null && screen_operator.text.isEmpty()) {
             // stopping same number value from assigning while pressing operator twice
-            secondNumber = BigDecimal(screen_result.text.toString())
+            try {
+                secondNumber = BigDecimal(screen_result.text.toString())
+            }
+            catch (e: Exception) {
+                //prevent app crash if screen_result.text is not a number
+                Toast.makeText(applicationContext, "clear the screen", Toast.LENGTH_SHORT).show()
+            }
         }
         else {
-            firstNumber = BigDecimal(screen_result.text.toString())
+            try {
+                firstNumber = BigDecimal(screen_result.text.toString())
+            }
+            catch (e: Exception) {
+                Toast.makeText(applicationContext, "clear the screen", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
