@@ -58,8 +58,13 @@ class MainActivity : AppCompatActivity() {
 
                 Log.d("click", screenNum.scale().toString())
                 screen_result.setText(result.toPlainString())
+            }
 
+            log?.setOnClickListener {
+                val screenNum = screen_result.text.toString()
+                val result = findLog(screenNum)
 
+                screen_result.setText(result)
             }
 
         }
@@ -176,6 +181,18 @@ class MainActivity : AppCompatActivity() {
 
             firstNumber = null
             secondNumber = null
+        }
+    }
+
+    private fun findLog(num: String?): String {
+
+        return try {
+            val doubleNum = num!!.toDouble()
+            Math.log10(doubleNum).toString()
+        }
+        catch (e: Exception) {
+            screen_operator.setText(R.string.error)
+            "0"
         }
     }
 
