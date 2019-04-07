@@ -64,7 +64,25 @@ class MainActivity : AppCompatActivity() {
                 val screenNum = screen_result.text.toString()
                 val result = findLog(screenNum)
 
+                screen_operator.text = null
                 screen_result.setText(result)
+            }
+
+            one_divide_x?.setOnClickListener {
+                val screenNum = screen_result.text.toString()
+                val result = division(BigDecimal.ONE, stringToBigDecimal(screenNum))
+
+                if(calculationError) {
+                    screen_operator.setText(R.string.error)
+                    calculationError = false
+                }
+                else {
+                    screen_operator.text = null
+                }
+
+                screen_result.setText(result!!.stripTrailingZeros().toPlainString())
+
+
             }
 
         }
@@ -181,6 +199,15 @@ class MainActivity : AppCompatActivity() {
 
             firstNumber = null
             secondNumber = null
+        }
+    }
+
+    private fun stringToBigDecimal(screenNum: String): BigDecimal? {
+       return try {
+            BigDecimal(screenNum)
+        }
+        catch (e: Exception) {
+            null
         }
     }
 
