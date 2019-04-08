@@ -246,7 +246,38 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun stringToBigDecimal(screenNum: String): BigDecimal? {
+
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+
+        outState?.putString("fn", firstNumber?.toPlainString())
+        outState?.putString("sn", secondNumber?.toPlainString())
+        outState?.putString("mt", memoryTotal.toPlainString())
+        outState?.putString("op", operator)
+        outState?.putBoolean("ce", calculationError)
+
+        outState?.putCharSequence("operatorValue", screen_operator.text.toString())
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+        super.onRestoreInstanceState(savedInstanceState)
+
+        val fn = savedInstanceState?.getString("fn")
+        val sn = savedInstanceState?.getString("sn")
+        val mt = savedInstanceState?.getString("mt")
+        val op = savedInstanceState?.getString("op")
+        val operatorValue = savedInstanceState?.getCharSequence("operatorValue")
+
+        if(fn != null) firstNumber = stringToBigDecimal(fn)
+        if(sn != null) secondNumber = stringToBigDecimal(sn)
+        if(mt !=null) memoryTotal = stringToBigDecimal(mt)
+        operator = op
+        calculationError = savedInstanceState?.getBoolean("ce")!!
+        screen_operator.text = operatorValue
+    }
+
+    private fun stringToBigDecimal(screenNum: String?): BigDecimal? {
        return try {
             setZeroEqualToZero(BigDecimal(screenNum))
         }
