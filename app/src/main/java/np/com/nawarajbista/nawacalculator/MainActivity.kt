@@ -37,19 +37,30 @@ class MainActivity : AppCompatActivity() {
             }
 
             square?.setOnClickListener {
-                val numOnScreen = BigDecimal(screen_result.text.toString())
-
+                val numOnScreen = stringToBigDecimal(screen_result.text.toString())
                 val square = setZeroEqualToZero(multiplication(numOnScreen, numOnScreen))
 
                 screen_operator.text = null
 
-                screen_result.setText(square?.toPlainString())
+                if(square != null) {
+                    screen_result.setText(square.toPlainString())
+                }
+                else {
+                    resetAll()
+                    screen_operator.setText(R.string.error)
+                }
 
             }
 
             factorial?.setOnClickListener {
-                val screenNum = BigDecimal(screen_result.text.toString()).stripTrailingZeros()
+                val screenNum = stringToBigDecimal(screen_result.text.toString())
                 var result = BigDecimal.ZERO
+
+                if(screenNum == null){
+                    resetAll()
+                    screen_operator.setText(R.string.error)
+                    return@setOnClickListener
+                }
                 screen_operator.text = null
 
                 if(screenNum.scale() <= 0 ) {
@@ -80,7 +91,7 @@ class MainActivity : AppCompatActivity() {
                     screen_operator.text = null
                 }
 
-                screen_result.setText(result!!.stripTrailingZeros().toPlainString())
+                screen_result.setText(setZeroEqualToZero(result)!!.toPlainString())
 
 
             }
@@ -100,13 +111,19 @@ class MainActivity : AppCompatActivity() {
                 screen_result.setText(calculate()?.toPlainString())
             }
 
-            val mPlus = BigDecimal(screen_result.text.toString())
+            val mPlus = stringToBigDecimal(screen_result.text.toString())
             screen_operator.setText(R.string.equal)
 
             firstNumber = null
             secondNumber = null
 
-            memoryTotal = addition(memoryTotal, mPlus)
+            if(mPlus != null) {
+                memoryTotal = addition(memoryTotal, mPlus)
+            }
+            else {
+                resetAll()
+                screen_operator.setText(R.string.error)
+            }
 
         }
 
@@ -118,13 +135,19 @@ class MainActivity : AppCompatActivity() {
                 screen_result.setText(calculate()?.toPlainString())
             }
 
-            val mMinus = BigDecimal(screen_result.text.toString())
+            val mMinus = stringToBigDecimal(screen_result.text.toString())
             screen_operator.setText(R.string.equal)
 
             firstNumber = null
             secondNumber = null
 
-            memoryTotal = subtraction(memoryTotal, mMinus)
+            if(mMinus != null) {
+                memoryTotal = subtraction(memoryTotal, mMinus)
+            }
+            else {
+                resetAll()
+                screen_operator.setText(R.string.error)
+            }
 
         }
 
@@ -156,10 +179,18 @@ class MainActivity : AppCompatActivity() {
 
 
         positiveNegative.setOnClickListener {
-            val screenNum = BigDecimal(screen_result.text.toString())
+            val screenNum = stringToBigDecimal(screen_result.text.toString())
             val valueChanger = BigDecimal("-1")
-            val newValue = screenNum.multiply(valueChanger)
-            screen_result.setText(newValue.toPlainString())
+
+            if(screenNum != null) {
+                val newValue = screenNum.multiply(valueChanger)
+                screen_result.setText(newValue.toPlainString())
+            }
+            else {
+                resetAll()
+                screen_operator.setText(R.string.error)
+                return@setOnClickListener
+            }
 
             if(screen_operator.text != null) {
                 screen_operator.text = null
@@ -167,21 +198,34 @@ class MainActivity : AppCompatActivity() {
         }
 
         root.setOnClickListener {
-            val screenNum = screen_result.text.toString().toDouble()
+            val screenNum: Double?
+            try {
+               screenNum = screen_result.text.toString().toDouble()
+            } catch (e: Exception) {
+                resetAll()
+                screen_operator.setText(R.string.error)
+                return@setOnClickListener
+            }
 
             screen_operator.text = null
 
-            if(screenNum != 0.0) {
+
+            try {
                 val rootNum = Math.sqrt(screenNum)
-                val rn = rootNum.toBigDecimal().stripTrailingZeros()
-                screen_result.setText(rn.toPlainString())
+                val rn = setZeroEqualToZero(rootNum.toBigDecimal())
+                screen_result.setText(rn?.toPlainString())
             }
+            catch (e: Exception) {
+                resetAll()
+                screen_operator.setText(R.string.error)
+            }
+
         }
 
         percent.setOnClickListener {
 
             if(firstNumber != null) {
-                secondNumber = BigDecimal(screen_result.text.toString())
+                secondNumber = stringToBigDecimal(screen_result.text.toString())
             }
 
             val ans = getPercentResult()
@@ -204,9 +248,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun stringToBigDecimal(screenNum: String): BigDecimal? {
        return try {
-            BigDecimal(screenNum)
+            setZeroEqualToZero(BigDecimal(screenNum))
         }
         catch (e: Exception) {
+            Toast.makeText(applicationContext, e.message, Toast.LENGTH_SHORT).show()
             null
         }
     }
@@ -347,21 +392,10 @@ class MainActivity : AppCompatActivity() {
     private fun getInputValue() {
         if(firstNumber != null && screen_operator.text.isEmpty()) {
             // stopping same number value from assigning while pressing operator twice
-            try {
-                secondNumber = BigDecimal(screen_result.text.toString())
-            }
-            catch (e: Exception) {
-                //prevent app crash if screen_result.text is not a number
-                Toast.makeText(applicationContext, "clear the screen", Toast.LENGTH_SHORT).show()
-            }
+            secondNumber = stringToBigDecimal(screen_result.text.toString())
         }
         else {
-            try {
-                firstNumber = BigDecimal(screen_result.text.toString())
-            }
-            catch (e: Exception) {
-                Toast.makeText(applicationContext, "clear the screen", Toast.LENGTH_SHORT).show()
-            }
+            firstNumber = stringToBigDecimal(screen_result.text.toString())
         }
     }
 
@@ -409,6 +443,7 @@ class MainActivity : AppCompatActivity() {
                     catch (e: Exception) {
                         resetAll()
                         calculationError = true
+                        Toast.makeText(applicationContext, e.message, Toast.LENGTH_SHORT).show()
                         return null
                     }
                 }
@@ -483,6 +518,7 @@ class MainActivity : AppCompatActivity() {
         catch (e: Exception) {
             resetAll()
             calculationError = true
+            Toast.makeText(applicationContext, e.message, Toast.LENGTH_SHORT).show()
         }
         finally {
             return ans
