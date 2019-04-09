@@ -26,7 +26,7 @@
     <string name="zero">0</string>
     <string name="error">E</string>
     <string name="log">log</string>
-    <string name="pie">π</string>
+    <string name="pie">\u213c</string>
     <string name="one_divide_x">1/x</string>
     <string name="factorial">x!</string>
     <string name="square">x\u00B2</string>
